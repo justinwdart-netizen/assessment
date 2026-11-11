@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Score your business across Business, Operations, Experience and Content, and Technology and Data, then download a PDF report.">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Experience Maturity Assessment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: ideasabound wordmark bar, a charcoal band per model, one scoring table per model. The three brand dots are the three levels: red Foundational, yellow Connected, blue Orchestrated. */
+:root{
+  --paper:#F7F7F5;--surface:#FFFFFF;--sunk:#EFEFEC;--ink:#18181B;--muted:#5E5E66;--faint:#94949C;--line:rgba(24,24,27,.10);--line-strong:rgba(24,24,27,.18);
+  --band:#1F1F23;--band-ink:#F4F4F5;--band-muted:#A9A9B1;
+  --red:#E2483D;--yellow:#F2C230;--blue:#2D6CDF;
+  --red-ink:#B8322A;--yellow-ink:#7A5D00;--blue-ink:#2257B8;
+  --red-tint:#FCEDEB;--yellow-tint:#FDF6DF;--blue-tint:#EAF0FC;
+  --on-red:#FFFFFF;--on-yellow:#18181B;--on-blue:#FFFFFF;
+  --font:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#121214;--surface:#1A1A1D;--sunk:#222226;--ink:#EDEDEF;--muted:#A3A3AB;--faint:#6E6E76;--line:rgba(255,255,255,.09);--line-strong:rgba(255,255,255,.18);
+  --band:#202024;--band-ink:#F4F4F5;--band-muted:#A3A3AB;
+  --red-ink:#F27C72;--yellow-ink:#F2C230;--blue-ink:#86A9F2;
+  --red-tint:#2B1D1C;--yellow-tint:#2A2516;--blue-tint:#182030;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#121214;--surface:#1A1A1D;--sunk:#222226;--ink:#EDEDEF;--muted:#A3A3AB;--faint:#6E6E76;--line:rgba(255,255,255,.09);--line-strong:rgba(255,255,255,.18);
+  --band:#202024;--band-ink:#F4F4F5;--band-muted:#A3A3AB;
+  --red-ink:#F27C72;--yellow-ink:#F2C230;--blue-ink:#86A9F2;
+  --red-tint:#2B1D1C;--yellow-tint:#2A2516;--blue-tint:#182030;
+  color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--paper);color:var(--ink);overflow-x:hidden;font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:101;background:var(--surface)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:720px){.pad{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}}
+.wrap{max-width:1200px;margin:0 auto}
+.label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dots{display:inline-flex;gap:3px;vertical-align:middle}
+.dots i{width:6px;height:6px;border-radius:50%;display:block}
+.dots i:nth-child(1){background:var(--red)}.dots i:nth-child(2){background:var(--yellow)}.dots i:nth-child(3){background:var(--blue)}
+
+/* nav */
+.nav{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;height:56px}
+.mark{display:flex;flex-direction:column;gap:3px;flex-shrink:0;line-height:1}
+.mark .dots{gap:3px;margin-left:1px}.mark .dots i{width:5px;height:5px}
+.word{font-size:19px;letter-spacing:-.02em}.word b{font-weight:600}.word span{font-weight:300;color:var(--muted)}
+.nav-tabs{display:flex;flex:1;overflow-x:auto;scrollbar-width:none;min-width:0;height:100%}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:0 12px;height:100%;display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--muted);cursor:pointer;border:0;border-bottom:2px solid transparent;background:none;white-space:nowrap;flex-shrink:0}
+.nav-tab:hover{color:var(--ink)}
+.nav-tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+.tab-score{font-size:10px;font-weight:600;padding:1px 6px;border-radius:9px}
+.nav-sep{width:1px;height:16px;background:var(--line-strong);align-self:center;margin:0 4px;flex-shrink:0}
+.btn{border:1px solid var(--line-strong);background:var(--surface);font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.primary:hover{opacity:.88}
+
+.section{display:none;padding-top:calc(56px + env(safe-area-inset-top,0px))}
+.section.active{display:block}
+
+/* home */
+.hero{padding-block:64px 40px}
+.hero h1{font-size:clamp(34px,5.6vw,64px);font-weight:600;letter-spacing:-.035em;line-height:1.02;max-width:14ch;text-wrap:balance;margin:14px 0 20px}
+.hero h1 .dots{gap:.12em;margin-left:.08em}.hero h1 .dots i{width:.14em;height:.14em}
+.hero p{font-size:16px;color:var(--muted);max-width:62ch}
+.hero p + p{margin-top:10px}
+.scale{display:flex;flex-direction:column;gap:12px;margin-top:28px}
+.scale-set{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline}
+.scale-lab{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);width:100%}
+.scale div{display:flex;gap:10px;align-items:baseline}
+.scale i{width:10px;height:10px;border-radius:50%;flex-shrink:0;transform:translateY(1px)}
+.scale b{font-weight:600;font-size:14px}.scale span{font-size:13px;color:var(--muted)}
+.streams{display:flex;flex-direction:column;gap:36px;padding-block:8px 72px}
+.stream-head{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;padding-bottom:12px;border-bottom:1px solid var(--line-strong);margin-bottom:14px}
+.stream-head h2{font-size:20px;font-weight:600;letter-spacing:-.015em}
+.stream-head p{font-size:13px;color:var(--muted);flex:1;min-width:220px}
+.stream-head .new{font-size:11px;font-weight:600;color:var(--red-ink)}
+.model-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.model-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.model-card:hover{border-color:var(--line-strong)}
+.model-card.scored{border-color:var(--line-strong)}
+.card-num{font-size:11px;color:var(--faint);font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.card-num em{font-style:normal;color:var(--red-ink);font-weight:600}
+.card-title{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.card-sub{font-size:12px;color:var(--muted);line-height:1.45}
+.card-score{margin-top:6px;font-size:13px;font-weight:600;color:var(--faint);display:flex;align-items:center;gap:8px}
+.card-score i{width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+
+/* model band */
+.band{background:var(--band);color:var(--band-ink);padding-block:36px 30px}
+.band .label{color:var(--band-muted);display:flex;gap:10px;align-items:center}
+.band h2{font-size:clamp(26px,4vw,42px);font-weight:600;letter-spacing:-.03em;line-height:1.05;margin:10px 0 10px;text-wrap:balance}
+.band p{font-size:14px;color:var(--band-muted);max-width:68ch}
+.band .acts{margin-top:14px;font-size:13px;color:var(--band-ink);display:flex;flex-wrap:wrap;gap:6px}
+.band .acts span{border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:3px 10px}
+.band .acts b{font-weight:600;color:var(--band-muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-right:4px;align-self:center}
+
+.table-wrap{overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--line)}
+.mt{width:100%;min-width:780px;border-collapse:collapse}
+.mt th{padding:14px 16px;text-align:left;vertical-align:bottom;font-size:13px;font-weight:600;border-bottom:1px solid var(--line-strong)}
+.mt th .lv{display:flex;align-items:center;gap:8px}
+.mt th .lv i{width:9px;height:9px;border-radius:50%}
+.mt th small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);margin-top:2px}
+.mt th.th-0{border-top:3px solid var(--red)}.mt th.th-1{border-top:3px solid var(--yellow)}.mt th.th-2{border-top:3px solid var(--blue)}
+.mt th.th-label{width:210px}
+.mt td{vertical-align:top;border-top:1px solid var(--line);padding:14px 16px;font-size:13px;line-height:1.55}
+.mt td.lbl{font-weight:600;font-size:13.5px}
+.mt td.lbl .ev{display:block;margin-top:6px;font-weight:400;font-size:11.5px;color:var(--muted);line-height:1.45}
+.mt td.lv-0{background:var(--red-tint)}.mt td.lv-1{background:var(--yellow-tint)}.mt td.lv-2{background:var(--blue-tint)}
+.mt tr.drow td.lit{box-shadow:inset 2px 2px 0 var(--ink),inset -2px 0 0 var(--ink)}
+.mt td.strip.lit{box-shadow:inset 2px -2px 0 var(--ink),inset -2px 0 0 var(--ink)}
+.mt tr.drow td:not(.lbl){padding-bottom:10px}
+.mt td.lbl{border-right:1px solid var(--line)}
+.mt td.strip{border-top:0;padding:0 10px 12px}
+.mt td.lv-0s{background:var(--red-tint)}.mt td.lv-1s{background:var(--yellow-tint)}.mt td.lv-2s{background:var(--blue-tint)}
+.strip-in{display:flex;gap:4px}
+.lane{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin-top:12px}
+.sb{flex:1 1 0;min-width:0;height:32px;font-size:12px;font-weight:600;border-radius:3px;cursor:pointer;border:0;display:flex;align-items:center;justify-content:center}
+.sb.l0{background:var(--surface);color:var(--red-ink);box-shadow:inset 0 0 0 1px var(--line-strong)}.sb.l0.sel{background:var(--red);color:var(--on-red)}
+.sb.l1{background:var(--surface);color:var(--yellow-ink);box-shadow:inset 0 0 0 1px var(--line-strong)}.sb.l1.sel{background:var(--yellow);color:var(--on-yellow)}
+.sb.l2{background:var(--surface);color:var(--blue-ink);box-shadow:inset 0 0 0 1px var(--line-strong)}.sb.l2.sel{background:var(--blue);color:var(--on-blue)}
+.sb:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.sb.sel{box-shadow:none}
+.lane-val{font-size:22px;font-weight:600;line-height:1}
+.lane-cap{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+
+.msum{padding-block:16px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.msum-score{font-size:30px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.msum-score small{font-size:15px;color:var(--faint);font-weight:500}
+.breakdown{display:flex;gap:18px;flex-wrap:wrap}
+.bd{display:flex;flex-direction:column;gap:2px;max-width:110px}
+.bd span{font-size:11px;color:var(--muted);line-height:1.25}
+.bd b{font-size:15px;font-weight:600;display:flex;align-items:center;gap:6px}
+.bd b i{width:7px;height:7px;border-radius:50%}
+.msum-right{display:flex;gap:10px;align-items:center}
+.pill{font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+
+/* results */
+.rhero{background:var(--band);color:var(--band-ink);padding-block:44px 36px}
+.rhero .label{color:var(--band-muted)}
+.rhero h2{font-size:clamp(30px,5vw,52px);font-weight:600;letter-spacing:-.035em;line-height:1.02;margin:10px 0}
+.rhero p{color:var(--band-muted)}
+.overall{padding-block:36px;display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:40px;align-items:start}
+@media (max-width:760px){.overall{grid-template-columns:minmax(0,1fr)}}
+.ov-score{font-size:72px;font-weight:600;letter-spacing:-.04em;line-height:1;margin-top:8px}
+.ov-score small{font-size:24px;color:var(--faint);font-weight:500}
+.ov-tier{margin-top:10px}
+.ov-note{font-size:13px;color:var(--muted);margin-top:12px;max-width:34ch}
+.spread{display:flex;flex-direction:column;gap:18px;min-width:0}
+.sp-row{display:grid;grid-template-columns:150px minmax(0,1fr) 36px;gap:14px;align-items:center}
+@media (max-width:520px){.sp-row{grid-template-columns:minmax(0,1fr) 36px}.sp-row .track{grid-column:1 / -1;grid-row:2}}
+.sp-name{font-size:13px;font-weight:600}
+.sp-avg{font-size:16px;font-weight:600;text-align:right}
+.track{position:relative;height:30px;border-radius:4px;display:grid;grid-template-columns:5fr 5fr 5fr;overflow:visible}
+.track .z0{background:var(--red-tint)}.track .z1{background:var(--yellow-tint)}.track .z2{background:var(--blue-tint)}
+.track .z0{border-radius:4px 0 0 4px}.track .z2{border-radius:0 4px 4px 0}
+.pt.tg{background:transparent!important;border:2px solid var(--ink);width:13px;height:13px;z-index:1}
+.pt{position:absolute;width:12px;height:12px;border-radius:50%;border:2px solid var(--surface);transform:translate(-50%,-50%);top:50%}
+.sp-axis{display:grid;grid-template-columns:150px minmax(0,1fr) 36px;gap:14px;font-size:11px;color:var(--faint)}
+.sp-axis div:nth-child(2){display:flex;justify-content:space-between}
+@media (max-width:520px){.sp-axis{grid-template-columns:minmax(0,1fr)}.sp-axis div:nth-child(1),.sp-axis div:nth-child(3){display:none}}
+
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--line);border-block:1px solid var(--line)}
+.rcard{background:var(--surface);padding:22px 20px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.rcard .label{font-size:10.5px}
+.rcard h3{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.rbig{font-size:44px;font-weight:600;letter-spacing:-.03em;line-height:1}
+.rbig small{font-size:18px;color:var(--faint);font-weight:500}
+.rbars{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+.rbar{display:grid;grid-template-columns:112px minmax(0,1fr) 22px;gap:8px;align-items:center}
+.rbar span{font-size:11.5px;color:var(--muted);line-height:1.2}
+.rtrack{height:6px;background:var(--sunk);border-radius:3px;position:relative}
+.rtick{position:absolute;top:-3px;width:3px;height:12px;border-radius:2px;background:var(--ink);transform:translateX(-50%)}
+.modeswitch{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px;background:var(--surface);flex-wrap:wrap}
+.modeswitch button{border:0;background:none;border-radius:999px;padding:7px 14px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer}
+.modeswitch button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.band .modeswitch{background:transparent;border-color:rgba(255,255,255,.25)}
+.band .modeswitch button{color:var(--band-muted)}
+.band .modeswitch button[aria-pressed="true"]{background:var(--band-ink);color:var(--band)}
+.band-tools{margin-top:18px}
+.brandcheck{display:none;margin-top:16px;border-left:3px solid var(--yellow);padding:2px 0 2px 14px;max-width:72ch;font-size:14px;color:var(--band-ink);line-height:1.55}
+.brandcheck b{display:block;font-size:15px;margin-bottom:2px}
+body[data-mode="target"] .brandcheck{display:block}
+.steplead{margin-top:32px;font-size:16px;color:var(--ink);font-weight:500}
+.steplead + .stepcards{margin-top:12px}
+.stepcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:28px}
+.stepcard{background:var(--surface);border:1px solid var(--line-strong);border-top:4px solid var(--line-strong);border-radius:10px;padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-width:0}
+.stepcard[data-step="target"]{border-top-color:var(--ink)}
+.stepcard[data-step="review"]{border-top-color:var(--ink);background:var(--sunk)}
+.stepcard[data-step="review"] .btn{background:var(--surface)}
+.stepcard[data-step="now"]{border-top-color:var(--faint)}
+.stepnum{font-size:44px;font-weight:600;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+.stepcard[data-step="now"] .stepnum{color:var(--muted)}
+.stepcard h2{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.stepcard p{font-size:15px;color:var(--muted);line-height:1.55;flex:1}
+.stepcard p b{color:var(--ink);font-weight:600}
+.stepprog{font-size:12.5px;color:var(--faint);font-weight:500}
+.stepcard .btn{margin-top:6px;padding:11px 18px;font-size:13.5px}
+.steps{display:flex;flex-direction:column;gap:6px;margin-top:6px;max-width:62ch}
+.steps li{font-size:15px;color:var(--muted);margin-left:20px}
+.steps li b{color:var(--ink)}
+.sb.tgt,.sb.sel.tgt{box-shadow:inset 0 0 0 2.5px var(--ink)}
+.mt td.tlit{background-image:repeating-linear-gradient(135deg,transparent 0 7px,var(--line) 7px 8px)}
+.lane-oth{font-size:11.5px;color:var(--muted);flex-basis:100%;font-weight:500}
+.msum-target{font-size:13px;color:var(--muted);margin-top:2px}
+.msum-target b{color:var(--ink)}
+.rtarget{font-size:13px;color:var(--muted)}.rtarget b{color:var(--ink)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.cta{border:1px solid var(--line-strong);background:var(--surface);border-radius:10px;padding:20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.cta h3{font-size:17px;font-weight:600}.cta p{font-size:13px;color:var(--muted);max-width:62ch}
+.rfill{height:100%;border-radius:3px;transition:width .6s ease}
+.rbar b{font-size:12px;font-weight:600;text-align:right}
+.rempty{font-size:13px;color:var(--faint)}
+
+.recs{padding-block:36px}
+.review{border-left:3px solid var(--ink);padding:2px 0 2px 16px;margin-bottom:28px;max-width:72ch}
+.review p{font-size:14px;color:var(--muted);margin-top:4px}
+.recs h3{font-size:20px;font-weight:600;letter-spacing:-.015em;margin-bottom:4px}
+.recs > .wrap > p{font-size:13px;color:var(--muted);margin-bottom:18px}
+.rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px}
+.rec{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.rec-top{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600}
+.rec-top i{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rec-top span{color:var(--muted);font-weight:500}
+.rec p{font-size:13px;line-height:1.55}
+.rec small{font-size:11.5px;color:var(--muted);line-height:1.45}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding-block:0 40px}
+.note{font-size:12.5px;color:var(--muted)}
+.report{border:1px solid var(--line-strong);background:var(--surface);border-radius:10px;padding:20px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:14px 16px;align-items:end;margin-bottom:16px}
+@media (max-width:720px){.report{grid-template-columns:minmax(0,1fr)}}
+.report h3{grid-column:1 / -1;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.report h3 + p{grid-column:1 / -1;font-size:13px;color:var(--muted);margin-top:-8px;max-width:70ch}
+.field{display:flex;flex-direction:column;gap:5px;min-width:0}
+.field label{font-size:12px;font-weight:600;color:var(--muted)}
+.field input{font:inherit;font-size:14px;padding:9px 11px;border:1px solid var(--line-strong);border-radius:6px;background:var(--paper);color:var(--ink);width:100%}
+.field input:focus{outline:2px solid var(--blue);outline-offset:0;border-color:transparent}
+textarea.copybox{width:100%;height:200px;background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:6px;padding:10px;font:12px/1.5 ui-monospace,Menlo,monospace;margin-bottom:40px}
+@media (max-width:640px){.word{font-size:17px}.nav{gap:10px}.btn.primary{padding:7px 10px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<nav class="nav pad">
+  <div class="mark" aria-label="ideasabound"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="word"><b>ideas</b><span>abound</span></span></div>
+  <div class="nav-tabs" id="navTabs"></div>
+  <button class="btn primary" type="button" data-go="results">Results</button>
+</nav>
+
+<div class="section active" id="home">
+  <div class="hero pad"><div class="wrap">
+    <div class="label">Experience maturity assessment</div>
+    <h1>Find out where the experience breaks<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></h1>
+    <p>Score the whole business across the four workstreams of a whole-business discovery: Business, Operations, Experience and Content, and Technology and Data. Business and Operations are the streams most discoveries leave out, so they sit first.</p>
+    <p>The 1 to 15 scale measures how connected the business is around the customer, across people, processes and systems. Systems and data models top out at Orchestrated. People and organisation models top out at Embedded. Both cover 11 to 15, so scores compare across every model.</p>
+    <div class="scale" id="scaleKey"></div>
+    <p class="steplead">Work through it in three steps.</p>
+    <div class="stepcards">
+      <div class="stepcard" data-step="now"><div class="stepnum">1</div><h2>Where you are</h2><p>Use the evidence listed. Ask yourself or coworkers to score each dimension. Ask yourself, <b>where is our business today?</b></p><div class="stepprog" id="prog-now"></div><button class="btn primary" type="button" data-act="start-now">Start: where you are →</button></div>
+      <div class="stepcard" data-step="target"><div class="stepnum">2</div><h2>Where you want to be</h2><p>Now that you know where you are, think about where you want to be. Ask one question every time: <b>is this on brand?</b></p><div class="stepprog" id="prog-target"></div><button class="btn primary" type="button" data-act="start-target">Start: where you want to be →</button></div>
+      <div class="stepcard" data-step="review"><div class="stepnum">3</div><h2>Compare and prioritise</h2><p>When you've finished, compare where you are and where you want to be with your team. Agree <b>which areas to tackle first</b> for immediate business and operational impact, and which can wait.</p><div class="stepprog"></div><button class="btn" type="button" data-go="results">See your results →</button></div>
+    </div>
+  </div></div>
+  <div class="pad"><div class="wrap streams" id="homeCards"></div></div>
+</div>
+
+<div id="modelSections"></div>
+
+<div class="section" id="results">
+  <div class="rhero pad"><div class="wrap">
+    <div class="label">Results</div>
+    <h2>Your experience maturity profile</h2>
+    <p id="resultsSub"></p>
+  </div></div>
+  <div class="pad"><div class="wrap overall">
+    <div>
+      <div class="label">Overall score today</div>
+      <div class="ov-score" id="overallScore">—</div>
+      <div class="ov-tier" id="overallTier"></div>
+      <div class="rtarget" id="overallTarget" style="margin-top:10px"></div>
+      <p class="ov-note" id="overallNote">Score at least one model to see your profile.</p>
+    </div>
+    <div class="spread" id="spread" aria-label="Model scores by workstream"></div>
+  </div></div>
+  <div class="rgrid" id="resultsGrid"></div>
+  <div class="recs pad"><div class="wrap">
+    <div class="review"><h3>Review with your team</h3><p>Compare where you are and where you want to be with your team. Agree which areas to tackle first for immediate business and operational impact, and which can wait. The list below is a starting point for that conversation, not the answer.</p></div>
+    <h3>Where to focus</h3>
+    <p id="recIntro">Weakest models first. Each action fits the level the model scored at today.</p>
+    <div class="rec-grid" id="recGrid"></div>
+  </div></div>
+  <div class="pad"><div class="wrap">
+    <div class="cta" id="targetCta" hidden><div><h3>Now, where do you want to be?</h3><p>Set a target for each dimension. Before you choose, ask whether that level is on brand for you. Advanced is not always the right answer.</p></div><button class="btn primary" type="button" data-act="start-target">Set your targets</button></div>
+    <div class="report">
+      <h3>Take the report away</h3>
+      <p>Download a PDF with your overall score, workstream scores, each dimension at the level you chose, and the next step for every model.</p>
+      <div class="field"><label for="bizName">Business name</label><input id="bizName" type="text" autocomplete="organization" placeholder="Your business"></div>
+      <div class="field"><label for="bizBy">Completed by</label><input id="bizBy" type="text" autocomplete="name" placeholder="Name or team"></div>
+      <button class="btn primary" type="button" id="pdfBtn">Download PDF report</button>
+    </div>
+    <div class="actions">
+      <button class="btn" type="button" id="copyBtn">Copy summary</button>
+      <span id="clearWrap"></span>
+      <span class="note" id="actNote" aria-live="polite"></span>
+    </div>
+    <div id="copyOut"></div>
+  </div></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const STREAMS = [
+  {id:"business",name:"Business",desc:"Brand, ambition and the measures that define success",added:true},
+  {id:"operations",name:"Operations",desc:"How the work really gets done, and how it feels to do it",added:true},
+  {id:"experience",name:"Experience and content",desc:"Every place a person meets the brand, physical and digital"},
+  {id:"tech",name:"Technology and data",desc:"Who owns the systems and data, and whether they hold the experience together"}
+];
+const MODELS = [
+/* ---------- Business ---------- */
+{id:"brand",lens:"people",stream:"business",added:true,name:"Brand and Ambition",short:"Brand",measures:"whether the brand promise, ambition and success measures are clear enough for people to act on",acts:["Brand foundations","1, 3, 5, 7 year business review","Corporate ambition and strategy review","KGIs, KPIs and other metrics"],dims:[
+ {name:"Brand foundations",levels:["The promise lives in a guideline document; few staff can say what it is","Promise defined and shared, but applied unevenly across departments and touchpoints","Promise understood and used to make decisions at every layer, from brand to interface"],metrics:"Staff who can state the promise (%); touchpoints audited against it"},
+ {name:"Corporate ambition",levels:["Ambition is a slogan; nobody can trace it to a roadmap","Ambition linked to a roadmap; frontline teams hear it secondhand","Ambition people can latch on to: traced to the roadmap, measured, and felt by customers"],metrics:"Roadmap items tied to the ambition (%); staff who can connect their work to it"},
+ {name:"Strategy review",levels:["Strategy reviewed once a year against financial targets only","1 and 3 year reviews include customer and staff signals","1, 3, 5 and 7 year reviews, revisited as conditions change, with frontline input"],metrics:"Review cadence; horizons covered; inputs beyond finance"},
+ {name:"Success measures",levels:["KGIs and KPIs cover revenue and cost only","Customer measures such as NPS, CSAT and repeat rate sit beside financial ones","KGIs and KPIs connect brand, staff and customer outcomes to revenue"],metrics:"Customer and staff KPIs in executive reporting; KPI to KGI traceability"}]},
+{id:"gtm",lens:"people",stream:"business",added:true,name:"Go-to-Market Maturity",short:"Go-to-Market",measures:"how well the business defines who it serves, what it offers and how it brings that to market",acts:["Corporate strategy review","Audience mapping and persona design","Journey mapping","KGIs, KPIs and other metrics"],dims:[
+ {name:"Market definition",levels:["Market described broadly; its size is unknown","Segments and market size estimated; competitors listed","Market sized by segment with evidence, and reviewed as conditions change"],metrics:"Addressable market by segment; date of last review"},
+ {name:"Target customer",levels:["Target is a demographic with no evidence behind it","Personas built from internal knowledge and some research","Target customers defined from real behaviour and conversations, and validated by results"],metrics:"Personas backed by research; share of sales from target segments"},
+ {name:"Problem and value",levels:["Value described as product features","Customer problem stated; value proposition agreed internally","Problem validated with customers; value expressed in their words and proven in results"],metrics:"Customers interviewed on the problem; value proposition test results"},
+ {name:"Positioning",levels:["No clear position; sounds like competitors","Positioning statement written and used by marketing","A distinct position everyone, from leaders to the front line, can explain and deliver"],metrics:"Staff who can explain the position; differentiation in brand research"},
+ {name:"Messaging",levels:["Messages written campaign by campaign; inconsistent across channels","Message framework shared across marketing","One message hierarchy used by marketing, sales, service and stores, tested with customers"],metrics:"Channels using the framework; message test results"},
+ {name:"Pricing",levels:["Priced on cost or by matching competitors; discounts drive sales","Pricing reviewed against value and competitors once a year","Pricing tied to value and segment, tested and monitored for margin and perception"],metrics:"Discount share of sales; price tests run; margin by segment"},
+ {name:"Sales motion",levels:["Selling depends on individuals; no defined process","Defined sales process for the main channels","Sales motion fits each segment and channel (self-serve, assisted, partner, store), with clean handoffs to service"],metrics:"Conversion by stage; sales cycle length; channel mix"},
+ {name:"Marketing",levels:["Activity-led; channels chosen by habit","Channel plan by segment; results reviewed monthly","Full-funnel plan by segment; budget follows measured results"],metrics:"Acquisition cost by channel; marketing-sourced revenue; spend under test (%)"},
+ {name:"Customer journey",levels:["Planning stops at the purchase; what happens after is left to operations","Journey mapped from awareness to purchase","Journey planned end to end, through onboarding, service and repeat, with every team ready on day one"],metrics:"Journey stages planned at launch; service issues in the first 90 days"},
+ {name:"Launch and timeline",levels:["Launch date set before readiness is known; frequent slips","Launch plan with milestones and owners","Staged launch with readiness gates across departments and a plan for after launch"],metrics:"Launches on time (%); readiness gates passed"},
+ {name:"Budget and resources",levels:["Budget is whatever is left; people added late","Budget and team agreed for each launch","Budget and people planned against goals, with room to shift as results come in"],metrics:"Spend vs plan; launch roles filled before kickoff"},
+ {name:"Metrics and goals",levels:["Success means hitting the launch date or a sales number","Launch KPIs set for revenue and acquisition","Goals cover acquisition, experience and retention, tied to KGIs and reviewed after launch"],metrics:"KPIs per launch; post-launch reviews completed"},
+ {name:"Product roadmap",levels:["Roadmap built apart from go-to-market; marketing learns late","Marketing and sales see the roadmap each quarter","Roadmap and go-to-market planned together, shaped by customer and market feedback"],metrics:"Roadmap items with a go-to-market plan; lead time from roadmap to launch plan"}]},
+{id:"ex",lens:"people",stream:"operations",added:true,name:"Employee Experience",short:"Employees",measures:"how it feels to do the work, and whether staff are led to live the brand",acts:["Staff experience surveys","Exit and stay interview insights","Organizational charts"],dims:[
+ {name:"Staff sentiment",levels:["No regular staff survey; sentiment heard only through managers","Annual engagement survey; results shared with leaders","Regular pulse and working-environment surveys, acted on and reported back to staff"],metrics:"Survey cadence; response rate; actions taken from results"},
+ {name:"Living the brand",levels:["Staff are managed to tasks; the brand is a poster","The brand is covered in onboarding and training","Staff are led, not just managed, and live the promise before customers feel it"],metrics:"Staff who can state the promise; audit or mystery shop scores"},
+ {name:"Tools and processes",levels:["Tools fight the work; staff rely on workarounds","Core tools fit most tasks; known pain points are queued","Tools and processes designed with staff and improved from their feedback"],metrics:"Tool satisfaction; time lost to systems; workaround count"},
+ {name:"Exit and stay insight",levels:["Exit interviews filed and forgotten; no stay interviews","Exit themes reviewed by HR","Exit and stay insight shared with leaders and fed into operations"],metrics:"Attrition by team; stay interview coverage; themes acted on"}]},
+{id:"flow",lens:"people",stream:"operations",added:true,name:"Operational Flow and Handoffs",short:"Op Flow",measures:"how the work really gets done, and where the official process and real work have split",acts:["Operational flow mapping","Organizational charts","Third-party reviews"],dims:[
+ {name:"Process visibility",levels:["Processes undocumented or out of date","Core processes mapped by head office","Flows mapped with the people who do the work, and kept current"],metrics:"Processes mapped (%); date of last review"},
+ {name:"Workarounds",levels:["Workarounds are hidden; nobody has counted them","Known workarounds logged by some teams","A workaround inventory is kept, and each one is treated as a design signal"],metrics:"Workarounds logged; workarounds retired per quarter"},
+ {name:"Handoffs",levels:["Handoffs between departments are where things get lost","Handoffs defined for main journeys; exceptions handled by email","Every handoff has an owner, a standard and a measure"],metrics:"Handoff failures; tickets bounced between teams"},
+ {name:"Partners and third parties",levels:["Partners seen only as vendors; their view is never asked","Partner reviews cover SLAs and cost","Partners, couriers and agencies are treated as part of the experience"],metrics:"Partner reviews per year; partner-caused incidents"}]},
+{id:"align",lens:"people",stream:"operations",added:true,name:"Alignment and Governance",short:"Alignment",measures:"whether ambition reaches daily work (vertical) and divisions work together (horizontal)",acts:["Organizational charts","Corporate ambition","Tech and data governance review"],dims:[
+ {name:"Vertical alignment",levels:["Goals set at the top; daily work runs on its own targets","Goals cascaded through managers and understood unevenly","Leaders walk the floor, ask questions and connect daily effort to the ambition"],metrics:"Teams with goals linked to the ambition; leader time on the floor"},
+ {name:"Management layers",levels:["Upper and middle management work from different pictures","Regular cascades; middle managers relay rather than shape","Upper and middle management share one picture and shape it together"],metrics:"Cross-layer forums; middle manager input to plans"},
+ {name:"Horizontal governance",levels:["Divisions protect their own numbers; the issues land on customers","Cross-division meetings for major launches","Shared ownership across divisions; teams work across when numbers drop"],metrics:"Cross-division KPIs; customer issues caused by internal conflict"},
+ {name:"Journey ownership",levels:["Nobody owns the journey between departments","Owners named for some stages","Every journey stage has an owner accountable for the customer outcome"],metrics:"Journey stages with a named owner (%)"}]},
+{id:"operating",lens:"people",stream:"operations",name:"Digital Operating Model",short:"Operating",measures:"whether the business can own, run and improve digital without depending on vendors",acts:["Organizational charts","Third-party reviews"],dims:[
+ {name:"Ownership",levels:["No single owner; decisions left to vendors","Digital lead named, but key decisions need IT and other departments to agree","Product owner accountable for business KPIs, with clear decision rights"],metrics:"Named owner (Y/N); departments with a veto over changes"},
+ {name:"Vendor structure",levels:["Many vendors each own a fragment; issues fall between contracts","A lead vendor coordinates the others","Few accountable partners on outcome SLAs; any of them replaceable"],metrics:"Vendor count; cross-vendor incidents; SLA attainment"},
+ {name:"Delivery model",levels:["Fixed-scope projects with long gaps between releases","Agile teams for some products; roadmap reviewed quarterly","Persistent product teams work from live data in short cycles"],metrics:"Roadmap delivered (%); incident recovery time; run vs grow spend"},
+ {name:"Skills and digital literacy",levels:["Teams cannot read data or write requirements","Core digital team trained; business teams depend on it","Digital, marketing and store teams use data and write requirements themselves"],metrics:"Staff trained (%); requests needing outside help"}]},
+{id:"orders",stream:"operations",name:"Order and Fulfilment",short:"Fulfilment",measures:"whether stock, orders and delivery promises work as one across channels",acts:["Operational flow mapping","Third-party reviews","Current tech platform audit"],dims:[
+ {name:"Inventory visibility",levels:["EC and store stock kept apart; synced daily","Near-real-time warehouse view; stores partly visible","One real-time stock pool across warehouses, stores and marketplaces"],metrics:"Inventory accuracy (%); SKUs with real-time stock (%); sync latency"},
+ {name:"Order orchestration",levels:["Orders ship from one warehouse; exceptions handled by hand","Click-and-collect and ship-from-store in some locations","Rules route each order to the best node by cost, speed and stock"],metrics:"Ship-from-store share; manual intervention rate; split-shipment rate"},
+ {name:"Delivery promise",levels:["Generic delivery dates; frequent misses","Delivery slots shown; promises based on static rules","Accurate dynamic promises by item and address, including same day"],metrics:"Promise accuracy; on-time delivery (%); stockout cancellations"},
+ {name:"Returns and subscriptions",levels:["Returns by post only; subscriptions fixed and hard to change","Store returns for online orders; customers can skip or pause","Any-channel returns with instant refunds; subscriptions adapt to usage"],metrics:"Return cycle time; subscription churn; skip and pause usage"}]},
+/* ---------- Experience and content ---------- */
+{id:"voc",lens:"people",stream:"experience",added:true,name:"Voice of the Customer",short:"Customer Voice",measures:"whether the business hears customers directly, and through the people closest to them",acts:["Behavioral surveys","Touchpoint audits","Audience mapping and persona design"],dims:[
+ {name:"Direct listening",levels:["Customers inferred from clicks, personas and segments","Periodic surveys; NPS or CSAT tracked","Behavioral surveys and regular conversations with real customers"],metrics:"Customers spoken to per quarter; survey coverage"},
+ {name:"The human trail",levels:["Tickets, call notes and return reasons stay in their own systems","Support data reviewed monthly by service teams","Tickets, calls, store feedback and returns analyzed together and fed into decisions"],metrics:"Sources analyzed together; time from complaint theme to action"},
+ {name:"Frontline insight",levels:["Frontline staff are never asked what customers tell them","Frontline feedback collected through managers","Shadowing, sessions without managers present, and a direct line from the front line to decision makers"],metrics:"Frontline sessions per quarter; insights logged from staff"},
+ {name:"Closing the loop",levels:["Feedback collected, but nothing visibly changes","Major issues fixed; customers rarely told","Customers and staff see what changed because of what they said"],metrics:"Issues closed with a reply to the source; repeat complaint rate"}]},
+{id:"experience",stream:"experience",name:"Touchpoint Experience",short:"Touchpoints",measures:"how consistent and connected every touchpoint is, physical and digital",acts:["Touchpoint mapping","Touchpoint audits","Journey mapping"],dims:[
+ {name:"Touchpoint coverage",levels:["Only the website and app are mapped","Digital and main physical touchpoints mapped","Every touchpoint mapped and audited: web, app, store, service desk, call centre and courier"],metrics:"Touchpoints mapped; touchpoints audited in the last year"},
+ {name:"Channel integration",levels:["Channels siloed: web, app and store run separately","Channels synchronised: cart and account shared between web and app","Channels orchestrated: store, app and web work as one, with stock lookup, store apps and pickup"],metrics:"Customers active in 2+ channels (%); online-to-store conversion"},
+ {name:"Human service",levels:["Service run as a cost centre; scripts over judgment","Service teams empowered for common issues","Staff can make it right on the spot; service moments designed into the journey"],metrics:"First-contact resolution; CSAT after contact"},
+ {name:"Consistency across touchpoints",levels:["Each touchpoint looks and behaves differently","Consistent across digital touchpoints; stores and service follow their own rules","One consistent, user-centric experience across sites, apps, stores, service and print"],metrics:"Touchpoint audit findings; brand consistency score"}]},
+{id:"website",stream:"experience",added:true,name:"Website Maturity",short:"Website",measures:"how customer-centric, flexible and well run the website is",acts:["Touchpoint audits","Current tech platform audit","Data collection and audit"],dims:[
+ {name:"Experience",levels:["Content, UX and design are brand-centric and inconsistent across the site; everyone sees the same thing","Still brand-centric, with some relevant content for some customers; consistent within one site; basic personalisation such as a logged-in welcome","User-centric and consistent across multiple sites; heavily personalised and orchestrated through martech, such as the next best product on a return visit"],metrics:"Conversion rate; personalised sessions (%); design consistency audit"},
+ {name:"Technology",levels:["Built on an open-source platform such as WordPress, with limited design flexibility; security handled separately or not at all","Enterprise CMS with drag-and-drop modules; front and back end controlled from the CMS; CDN delivery for speed and security","Digital experience platform with a headless CMS serving any front end through APIs, integrated with martech and adtech"],metrics:"Page speed (LCP); days to launch a new page type; security incidents"},
+ {name:"Analytics and data",levels:["Pages tagged, but analytics are basic and nothing is compiled into reports for improvement; no customer data used","Static page-level KPI reports; tag management tracks general actions; basic demographic segments held in a CDP","Event-level tracking, behavioural segmentation and digital attribution; cookieless data clean room; journey analytics across the site"],metrics:"Events tracked; segments in use; journeys analysed"},
+ {name:"Organisation",levels:["No team; design is outsourced and built into a template with little oversight or review","Separate development, design and operations teams, with one person overseeing the process and reporting results","An integrated DevOps team works in agile cycles from live results; the whole organisation sees results in real time and shares accountability"],metrics:"Named owner; release cadence; time from insight to change"},
+ {name:"Automation and optimisation",levels:["No automation or optimisation","Some automation, such as interstitials that turn off on repeat visits; occasional optimisation","Menus and blocks change dynamically for each visitor; continuous testing through experience management tools"],metrics:"Tests per month; test win rate; revenue from optimisation"}]},
+{id:"crm",stream:"experience",name:"CRM Maturity",short:"CRM",measures:"how well customer data drives the right message, channel and moment",acts:["Audience mapping and persona design","Journey mapping","Data collection and audit"],dims:[
+ {name:"Data capture and usage",levels:["Data covers a few facets, mostly demographics and purchase, so it reflects past conversions only. Everyone gets the same thing, or segments are few","Segments built on product, LTV or engagement frequency. Data covers past conversion and behaviour, and behaviour-based journeys trigger desired actions","Real-time behaviour and engagement data captured. Trigger-based journeys make everything feel tailored to past engagement, purchases and current interest"],metrics:"Active segments; profile completeness; profiles with behavioural data (%)"},
+ {name:"Channels",levels:["Communication pushed from a single channel; everyone gets the same message","Several channels enabled for CRM, but the message is identical across them","Every channel has a distinct role; content and channel reflect past behaviour and present need"],metrics:"Reachable customers by channel; opt-in rate by channel"},
+ {name:"Journey management",levels:["No journey planning; CRM follows product calendars and campaigns only","Digital behaviour and other signals trigger pre-built micro-journeys; frequency capped to the channels where each customer is most engaged","Segment messaging developed with A/B and MVT testing; timing reflects the brand calendar plus first and third party signals of need"],metrics:"Live journeys; revenue from triggered messages (%); unsubscribe rate"},
+ {name:"Automation, optimisation and measurement",levels:["Optimised on long-term averages, such as more product emails opened on Saturday evenings than Monday mornings","Timing and frequency tuned to each customer's responsiveness and digital behaviour","Content modules populated and optimised dynamically with A/B, MVT and AI; content segmented by profile; each response shapes what comes next"],metrics:"CRM-attributed revenue; incremental lift vs holdout"}]},
+{id:"segmentation",stream:"experience",added:true,name:"Segmentation Maturity",short:"Segmentation",measures:"how well the business understands groups of customers and turns that into decisions and experiences",acts:["Audience mapping and persona design","Data collection and audit","Analysis and key insights"],dims:[
+ {name:"Data capture",levels:["Fragmented view of the client from separate data sources; primary media and business conversions tagged and tracked","Single client view with profile and transaction data; end-to-end site and app tracking; limited behavioural data from owned channels","Single client view with profile and digital engagement data, integrating every critical offline and online touchpoint"],metrics:"Sources in the single client view; offline touchpoints connected"},
+ {name:"Personas and audiences",levels:["Personas and moments designed from heuristics and panel data; audiences chosen by heuristics","Personas and moments enriched with first-party audience data; site and app audiences with lookalikes deployed","Personas enriched with first-party CRM plus second and third party data; integrity checked across sources"],metrics:"Personas backed by first-party data; audiences in active use"},
+ {name:"Client strategy",levels:["Business strategy disconnected from segmentation; basic, isolated tools; rudimentary metrics with no single measurement framework","Agreed metrics and KPIs, but limited understanding of next best action; models built on historical data; performance reviewed manually","Predictive models drive the segmentation engine; holistic KPI framework informs next best action; transactions attributed to segment actions"],metrics:"Decisions that use segments (%); segment-level KPIs reported"},
+ {name:"Nurture and journeys",levels:["Basic nurture campaigns; little variation of content online","Intermediate lead nurturing; sales and CRM insight informs journeys; transaction data varies content but stays siloed from site and app","Full-funnel nurturing; transaction, behavioural and partner data drive omnichannel campaigns with automatic trigger-based dialogue"],metrics:"Live nurture journeys; revenue from nurture (%)"},
+ {name:"Experience",levels:["Reactive to client behaviour; broad, tactical decisions from limited journey insight; weak link between product and client experience","Moments or persona-based messaging by channel; tailored nurture, upsell and cross-sell","Personalised omnichannel experience connecting online and offline; predictive next best product or offer; full link between product and experience to grow CLTV"],metrics:"CLTV by segment; cross-sell rate; personalised experiences live"}]},
+{id:"media",stream:"experience",added:true,name:"Media Maturity",short:"Media",measures:"how well paid media finds new customers, reaches known ones and proves what it adds",acts:["Data collection and audit","Analysis and key insights"],dims:[
+ {name:"Data capture",levels:["Primary media and business conversions tagged and tracked","End-to-end tracking through site and app analytics","Single customer view integrating critical offline and online touchpoints in real time"],metrics:"Conversions tracked; offline touchpoints connected to media"},
+ {name:"Prospecting and enrichment",levels:["Audiences chosen by heuristics, with basic lookalike modelling","Personas and moments informed by heuristics and panel data; segment-level modelling","First-party audiences enriched with second and third party and walled-garden data, plus segment-level modelling"],metrics:"Prospecting audiences in use; new-customer share of acquisitions"},
+ {name:"First-party deployment",levels:["Site and app audiences through analytics platforms or vendor pixels","CRM audiences deployed, but siloed from site and app engagement","Machine learning models drive segmentation across connected touchpoints"],metrics:"CRM match rate; first-party audiences in media spend (%)"},
+ {name:"Personalisation",levels:["No personalisation practice","Moments or persona-based messaging; CRM segments drive tailored nurture, upsell and cross-sell","Omni-path analysis from a single customer view; predictive next best offer; vision and language models find the creative themes that perform"],metrics:"Personalised creative share; lift from tailored creative"},
+ {name:"Measurement",levels:["Proxy metrics such as CPC and CTR, with some site conversions tracked","Brand lift surveys and A/B tools measure incrementality","Multi-touch attribution across paid and organic, plus MMM or matched-market tests for media that cannot be tracked"],metrics:"Spend measured for incrementality (%); attribution coverage"},
+ {name:"Automation and optimisation",levels:["Manual bidding and budgets; no product feeds; goals set up in analytics tools","Smart bidding with manual adjustments, using sales and CRM insight across creative, landing pages and audiences","Smart bidding optimised to total CRM outcomes; dynamic feeds and landing pages scale personalisation"],metrics:"Spend on automated bidding (%); return on ad spend; customer value per acquisition"}]},
+{id:"loyalty",stream:"experience",name:"Loyalty and Retention",short:"Loyalty",measures:"whether the loyalty programme changes behaviour and keeps customers coming back",acts:["Behavioral surveys","Data collection and audit"],dims:[
+ {name:"Programme design",levels:["Points only; the same reward for everyone","Tiers and member-only offers","Personalised benefits and experiences, not only discounts"],metrics:"Active members (%); tier distribution"},
+ {name:"Cross-channel earn and burn",levels:["Separate store and online programmes","Points shared across store and EC, with delays","Real-time earn and burn across store, EC, app, messaging apps and partners"],metrics:"Transactions with member ID (%); redemption by channel"},
+ {name:"Programme economics",levels:["Cost tracked as discount only; liability unclear","Liability and breakage tracked; members compared with non-members","ROI measured on incremental behaviour; rewards tuned to margin"],metrics:"Member share of sales; member vs non-member AOV and frequency; points liability"},
+ {name:"Retention",levels:["Lapsed customers noticed only after they leave","Churn rules trigger win-back campaigns","Churn predicted early and prevented with personalised offers"],metrics:"12-month retention; repeat purchase rate; reactivation rate"}]},
+{id:"content",stream:"experience",name:"Product and Content Operations",short:"Content",measures:"how fast products and content reach every channel, and who can publish them",acts:["Touchpoint audits","Current tech platform audit"],dims:[
+ {name:"Product data governance",levels:["Product data kept in spreadsheets and several systems","A PIM holds core attributes; channels still enrich separately","One source of product truth feeds every channel and marketplace"],metrics:"Systems holding product master data; attribute completeness (%)"},
+ {name:"Time to market",levels:["New SKUs take weeks; acquired brands take months","SKUs go live in days with manual steps","SKUs and brands onboarded in hours with assisted enrichment"],metrics:"Days from SKU creation to live; days to onboard a brand"},
+ {name:"Marketer self-service",levels:["Every page change needs a developer ticket","Templates let marketers publish standard pages","Marketers build, schedule and personalise pages without developers"],metrics:"Pages published without a dev ticket (%); content lead time"},
+ {name:"Localisation and reuse",levels:["Content duplicated for each site and language","Shared components across some sites","One content model serves every site, language, app and store screen"],metrics:"Content reuse rate; duplicated content repositories"}]},
+/* ---------- Technology and data ---------- */
+{id:"data",stream:"tech",name:"Data and Reporting",short:"Reporting",measures:"who owns the data, and whether reporting is complete, easy to use, trusted and fast enough to steer the business",acts:["Tech and data governance review","Data collection and audit","Analysis and key insights"],dims:[
+ {name:"Ownership and governance",levels:["Nobody knows who owns which system or dataset","Owners named for core systems; data ownership unclear","Every system and dataset has an owner, with rules for access and change"],metrics:"Systems and datasets with a named owner (%)"},
+ {name:"Completeness of reporting",levels:["Performance reported by single channel or campaign; customer value (RFM) tracked by channel; sales and finance from POS data","End-to-end reporting across the customer journey; engagement and health tracked across channels; customer-centric segmentation","Forecasting, simulations and interactive reports"],metrics:"KPIs with automated reports (%); channels covered"},
+ {name:"Ease of use",levels:["Separate reports in separate tools, built by hand","One portal to static reports; standard reports distributed automatically","One portal to adaptive reports; triggered distribution, alerts and anomaly detection"],metrics:"Reporting tools in use; reports built by hand each month"},
+ {name:"Access and control",levels:["A separate sign-on for each report; everyone sees the same view","Single sign-on to all reports, but the same view for everyone","Single sign-on, with views controlled by role and need"],metrics:"Reports behind single sign-on (%); role-based views in place"},
+ {name:"Quality of data",levels:["Only built-in quality controls; no active hygiene, no defined rules, no lineage recorded","Hygiene anomaly detection; a documented rule set; some controls consolidated; some lineage recorded","Hygiene rules documented and run centrally, with quality feedback and alerts; full lineage recorded"],metrics:"Data error rate; critical fields with rules (%); time to detect bad data"},
+ {name:"Velocity",levels:["Frequency and age of data vary widely; sources not ingested as fast as they could be","Some sources available with minimal delay; almost all data through automated pipelines","All sources integrated with minimal delay; systems upgraded for fresher data; no manual imports"],metrics:"Average data latency; manual imports per month"},
+ {name:"Learning and optimisation",levels:["A/B testing within a single channel or campaign","Cross-channel multivariate testing and media attribution modelling","AI recommendations and optimisation"],metrics:"Experiments per month; decisions backed by tests (%); revenue covered by attribution"}]},
+{id:"platform",stream:"tech",name:"Platform and Architecture",short:"Platform",measures:"how quickly and safely the business can change what it sells and how",acts:["Current tech platform audit","Technical architecture"],dims:[
+ {name:"Architecture",levels:["Monolith or heavily customised package; one change touches many systems","Some capabilities separated; APIs exist for key functions","Composable: identity, catalog, orders and content each replaceable through APIs"],metrics:"Systems touched per feature; capabilities behind APIs (%)"},
+ {name:"Change velocity",levels:["Quarterly or slower releases, bundled and risky","Monthly releases with regression testing","Business changes ship in days through automated pipelines"],metrics:"Release frequency; request-to-live lead time; run vs change spend"},
+ {name:"Scale and resilience",levels:["Site slows or fails at campaign peaks; code freezes required","Peaks absorbed with manual scaling and preparation","Auto-scaling handles peaks with no freezes or special preparation"],metrics:"Peak orders per minute vs required; campaign uptime; freeze days per year"},
+ {name:"Integration (ERP, POS, WMS)",levels:["Nightly batch files and point-to-point links","Middleware with some near-real-time feeds","Event-driven: stock, orders and customers sync in seconds"],metrics:"Point-to-point links; batch latency (hours); integration incidents per month"}]},
+{id:"identity",stream:"tech",name:"Identity and Consent",short:"Identity",measures:"whether the business recognises one customer across every channel, with consent",acts:["Data architecture","Tech and data governance review"],dims:[
+ {name:"Identity unification",levels:["Separate logins and IDs for each site, app and store","One login across EC and app; store customers partly matched","One customer ID across EC, app, store, messaging apps and call centre"],metrics:"Customers with a unified ID (%); duplicate-record rate; login systems"},
+ {name:"Channel linkage",levels:["Store and messaging-app behaviour not tied to customer profiles","Membership card or app links store purchases for some customers","Every identified touchpoint updates the profile in real time"],metrics:"Store transactions identified (%); messaging-app link rate"},
+ {name:"Consent and privacy",levels:["Consent captured inconsistently; requests handled by email","Central consent records; requests met within legal deadlines","Consent enforced at every use; disclosure and deletion are self-service and audited"],metrics:"Consent capture rate; days to fulfil requests; audit findings"},
+ {name:"Login experience",levels:["Passwords only; frequent resets and drop-off","Single sign-on plus social login","Passwordless, risk-based sign-in; returning customers recognised without friction"],metrics:"Login success rate; drop-off at login; password resets"}]},
+{id:"ai",stream:"tech",name:"AI and Decisioning Readiness",short:"AI",measures:"whether data, use cases and governance let AI improve daily decisions",acts:["Tech and data governance review","Analysis and key insights"],dims:[
+ {name:"Data foundation",levels:["Data scattered across systems; every question needs an IT request","Core data in one warehouse; analysts serve themselves","Governed, unified data that AI tools can query in real time"],metrics:"Decision-critical data in one place (%); data freshness; time to answer a question"},
+ {name:"Use cases in production",levels:["AI limited to pilots or vendor features nobody tracks","A few use cases live, such as search, recommendations or content drafts, with named owners","AI built into content, service, merchandising and CRM, each with measured impact"],metrics:"Use cases live vs pilot; weekly business users; measured uplift per use case"},
+ {name:"Governance and human review",levels:["No AI policy; usage unmanaged","Policy agreed; reviews handled case by case","Every AI action logged and approved by a named owner; data-use rules enforced"],metrics:"Policy in place (Y/N); AI actions with logged approval (%); incidents"},
+ {name:"Insight to action",levels:["Insights arrive in monthly reports, too late to act","Dashboards flag issues; teams act manually","The system spots issues and proposes fixes; teams approve and ship the same day"],metrics:"Time from signal to action; share of actions proposed by the system"}]}
+];
+const RECS = {
+brand:["Write the brand promise in one sentence staff can repeat, and audit three key touchpoints against it. Add one customer measure to the executive KPIs.","Trace the ambition to the roadmap so every major project names the part it serves. Run the 1 and 3 year review with customer and staff signals, not only finance.","Use the promise as a decision test at every layer. Extend reviews to 5 and 7 years and connect brand, staff and customer KPIs to the KGIs."],
+gtm:["Size the market by segment and define the target customer from real conversations, not demographics. Validate the problem with customers before writing the positioning.","Share one message framework across marketing, sales, service and stores, and test pricing against value. Plan the journey past the purchase and set readiness gates for every launch.","Plan the roadmap and go-to-market together. Let budget follow results, and review every launch against acquisition, experience and retention goals."],
+ex:["Start a short, regular staff survey and report back what changed. Begin stay interviews in the teams closest to customers.","Bring the brand promise into daily leadership, not only onboarding. Ask staff which tools slow them down and fix the top three.","Design tools and processes with staff, and share exit and stay insight with leaders every quarter. Keep leading, not just managing."],
+flow:["Map one core flow with the people who run it, and start a workaround inventory. Each workaround marks where the official process and real work have split.","Name an owner and a standard for each handoff on the main journeys. Bring partners into reviews that cover the experience, not only SLAs and cost.","Keep flows current with the front line and retire workarounds every quarter. Measure every handoff and treat partners as part of the experience."],
+align:["Name an owner for each stage of the main customer journey. Get leaders onto the floor to ask questions and remind people of the ambition.","Bring upper and middle management into one planning picture. Add cross-division KPIs so teams share the customer outcome.","Keep leaders visible at the front line and middle managers shaping plans. Use cross-division forums to act together when numbers drop."],
+operating:["Name one product owner accountable for digital KPIs, with interim support while the role is filled. Map which vendors own what.","Give the product owner clear decision rights and move to persistent product teams. Put vendors on outcome-based SLAs.","Run digital in-house with outside partners as advisors. Train marketing and store teams to read data and write requirements themselves."],
+orders:["Create one near-real-time view of stock across warehouses and stores. Introduce click-and-collect where stores already hold the stock.","Add rules-based routing and ship-from-store, and show dynamic delivery slots. Let customers return online orders in store.","Route every order to the best node by cost, speed and stock. Offer accurate same-day promises and subscriptions that adapt to usage."],
+voc:["Talk to real customers every month, and bring support tickets, call notes and return reasons into one review. A screen shows where someone dropped off; a person on the phone can tell you why.","Shadow frontline shifts and run sessions without managers present. Tell customers and staff what changed because of what they said.","Give the front line a direct line to decision makers, and analyze every human interaction alongside digital data. Close the loop on every theme."],
+experience:["Map every touchpoint, physical and digital, including the service desk, call centre and courier. Audit the ones customers use most.","Share cart and account across web, app and store, and empower service staff to fix common issues on the spot.","Design service moments into the journey and keep every touchpoint consistent. Test continuously using live results and customer feedback."],
+website:["Make content and design consistent and start tagging events that matter. Name one owner for the site, and move to an enterprise CMS with reusable modules and a CDN.","Shift from brand-centric to user-centric content, add behavioural segments to analytics, and bring design, development and operations under one process with regular testing.","Move to a headless platform connected to martech, personalise each visit with the next best product, and run the site as one DevOps team working from live results."],
+segmentation:["Bring profile and transaction data into one client view, and connect segmentation to business strategy with one measurement framework.","Enrich personas with first-party data, agree KPIs that inform next best action, and use CRM insight to shape journeys across site and app.","Use predictive models to drive the segmentation engine, integrate offline and online data, and attribute transactions to segment actions to grow CLTV."],
+media:["Track the conversions that matter end to end, deploy CRM audiences into media, and move from CPC and CTR to incrementality testing.","Connect CRM audiences with site and app engagement, add brand lift and A/B measurement, and feed sales and CRM insight into smart bidding.","Optimise bidding to total CRM outcomes, use multi-touch attribution plus MMM, and scale personalisation with dynamic feeds and landing pages."],
+crm:["Capture behaviour as well as purchases, build segments on product, value and engagement, and replace the campaign calendar with a few triggered journeys.","Give each channel a distinct role, cap frequency to where each customer is most engaged, and test segment messaging with A/B and MVT.","Let real-time signals trigger journeys and populate content dynamically with A/B, MVT and AI, so each response shapes the next message."],
+loyalty:["Unify store and online points so members earn and burn anywhere. Track points liability and compare members with non-members.","Add tiers and member-only benefits, and trigger win-back campaigns from churn rules. Make earn and burn real time.","Predict churn early and offer personalised benefits beyond discounts. Measure ROI on incremental behaviour and tune rewards to margin."],
+content:["Consolidate product data into one PIM and give marketers templates to publish without developer tickets.","Cut SKU time to market from days to hours with enrichment workflows. Share one content model across sites and languages.","Feed every channel and marketplace from one product source. Use assisted enrichment to onboard acquired brands quickly."],
+data:["Name an owner for every core system and dataset, bring reports into one portal, and document quality rules for the main feeds. Report one customer journey end to end.","Move to single sign-on with role-based views, add anomaly alerts and lineage, and run cross-channel tests and attribution so budget follows results.","Bring every source to near real time and add forecasting, simulation and triggered alerts. Tie AI recommendations to revenue."],
+platform:["Separate the first capability from the monolith, usually identity or orders, behind an API. Replace nightly batch files with near-real-time feeds for stock and orders.","Move to monthly or faster releases with automated testing. Remove code freezes by load-testing campaign peaks in advance.","Run each capability as a replaceable service on event-driven integration. Track run versus change spend to keep the cost of growth flat."],
+identity:["Merge separate logins into one customer ID across EC and app. Centralise consent records so privacy requests are met on time.","Link store and messaging-app activity to the same profile. Add social login to cut drop-off at sign-in.","Enforce consent at every use and make disclosure and deletion self-service. Move to passwordless, risk-based sign-in."],
+ai:["Bring core data into one place before buying AI tools. Agree an AI policy and name an owner for the first use case.","Move two or three use cases from pilot to production, such as search, recommendations or content drafting. Measure the uplift of each and log every approval.","Let the system propose actions from live data, with teams approving and shipping the same day. Review governance quarterly as use cases spread."]
+};
+const LV = [
+  {name:"Foundational",tag:"Siloed and manual",range:"1–5",c:"var(--red)",on:"var(--on-red)",ink:"var(--red-ink)"},
+  {name:"Connected",tag:"Integrated and segmented",range:"6–10",c:"var(--yellow)",on:"var(--on-yellow)",ink:"var(--yellow-ink)"},
+  {name:"Orchestrated",tag:"Real-time and personal",range:"11–15",c:"var(--blue)",on:"var(--on-blue)",ink:"var(--blue-ink)"}
+];
+const KEY = "ideasabound-maturity-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { state = {}; }
+MODELS.forEach(m => { if (!Array.isArray(state[m.id]) || state[m.id].length !== m.dims.length) state[m.id] = m.dims.map(() => null); });
+const TKEY = "ideasabound-targets-v1", MKEY = "ideasabound-mode";
+let targets = {};
+try { targets = JSON.parse(localStorage.getItem(TKEY)) || {}; } catch(e) { targets = {}; }
+MODELS.forEach(m => { if (!Array.isArray(targets[m.id]) || targets[m.id].length !== m.dims.length) targets[m.id] = m.dims.map(() => null); });
+let mode = "now";
+try { if (localStorage.getItem(MKEY) === "target") mode = "target"; } catch(e){}
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(state)); localStorage.setItem(TKEY, JSON.stringify(targets)); } catch(e){} }
+const MODESWITCH = `<div class="modeswitch" role="group" aria-label="Scoring step"><button type="button" data-mode="now">1. Where you are</button><button type="button" data-mode="target">2. Where you want to be</button></div>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num = i => String(i+1).padStart(2,"0");
+const streamOf = id => STREAMS.find(s => s.id === id);
+const lvIndex = v => v <= 5 ? 0 : v <= 10 ? 1 : 2;
+const LENS = {
+  systems:{label:"Systems and data", names:["Foundational","Connected","Orchestrated"], tags:["Siloed and manual","Integrated and segmented","Real-time and personal"]},
+  people:{label:"People and organisation", names:["Foundational","Connected","Embedded"], tags:["Individual and ad hoc","Defined and shared","Lived and adaptive"]},
+  mixed:{names:["Foundational","Connected","Orchestrated / Embedded"], tags:["","",""]}
+};
+const lensOf = m => (m && m.lens) || "systems";
+const levelsFor = lens => LV.map((l,i) => ({...l, name: LENS[lens].names[i], tag: LENS[lens].tags[i]}));
+const tier = (v, lens="mixed") => ({...LV[lvIndex(v)], name: LENS[lens].names[lvIndex(v)]});
+const dotColor = v => v == null ? "var(--line-strong)" : tier(v).c;
+const avg = arr => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : null;
+const modelAvg = id => avg(state[id].filter(v => v != null));
+const pill = (el, v, lens) => { if (v == null){ el.textContent = "Not scored"; el.style.background = ""; el.style.color = ""; } else { const t = tier(v, lens); el.textContent = t.name; el.style.background = t.c; el.style.color = t.on; } };
+const pillHTML = (v, lens) => { const t = tier(v, lens); return `<span class="pill" style="background:${t.c};color:${t.on}">${t.name}</span>`; };
+
+/* ---------- build ---------- */
+function buildNav(){
+  let h = `<button class="nav-tab active" type="button" data-go="home" id="tab-home">Overview</button>`;
+  STREAMS.forEach(s => {
+    h += `<span class="nav-sep" aria-hidden="true"></span>`;
+    MODELS.filter(m => m.stream === s.id).forEach(m => { h += `<button class="nav-tab" type="button" data-go="${m.id}" id="tab-${m.id}">${esc(m.short)}</button>`; });
+  });
+  document.getElementById("navTabs").innerHTML = h;
+}
+function buildHome(){
+  document.getElementById("scaleKey").innerHTML = ["systems","people"].map(k => `<div class="scale-set"><span class="scale-lab">${LENS[k].label}</span>${levelsFor(k).map(l => `<div><i style="background:${l.c}"></i><b>${l.name} ${l.range}</b><span>${l.tag}</span></div>`).join("")}</div>`).join("");
+  document.getElementById("homeCards").innerHTML = STREAMS.map(s => `<section>
+    <div class="stream-head"><h2>${esc(s.name)}</h2><p>${esc(s.desc)}</p>${s.added?`<span class="new">Often left out of discovery</span>`:""}</div>
+    <div class="model-cards">${MODELS.filter(m => m.stream === s.id).map(m => `<button class="model-card" type="button" data-go="${m.id}" id="card-${m.id}">
+      <div class="card-num"><span>Model ${num(MODELS.indexOf(m))} · ${lensOf(m)==="people"?"People":"Systems"}</span>${m.added?"<em>New</em>":""}</div>
+      <div class="card-title">${esc(m.name)}</div>
+      <div class="card-sub">${esc(m.dims.map(d=>d.name).join(", "))}</div>
+      <div class="card-score" id="card-score-${m.id}"><i></i>Not scored</div></button>`).join("")}</div></section>`).join("");
+}
+function buildSections(){
+  document.getElementById("modelSections").innerHTML = MODELS.map((m, mi) => {
+    const next = MODELS[mi+1];
+    const rows = m.dims.map((d, li) => `<tr class="drow" id="row-${m.id}-${li}"><td class="lbl" rowspan="2">${esc(d.name)}<span class="ev">Evidence: ${esc(d.metrics)}</span><div class="lane"><span class="lane-val" id="laneval-${m.id}-${li}">—</span><span class="lane-cap" id="lanecap-${m.id}-${li}">now</span><span class="lane-oth" id="laneoth-${m.id}-${li}"></span></div></td>${d.levels.map((t,b)=>`<td class="lv-${b}">${esc(t)}</td>`).join("")}</tr><tr class="srow" role="group" aria-label="${esc(d.name)} score">${
+      [0,1,2].map(b => `<td class="strip lv-${b}s"><div class="strip-in">${[1,2,3,4,5].map(k => { const n = b*5+k; return `<button class="sb l${b}" type="button" data-m="${m.id}" data-l="${li}" data-n="${n}" aria-label="${esc(d.name)}: score ${n}">${n}</button>`; }).join("")}</div></td>`).join("")
+    }</tr>`).join("");
+    return `<div class="section" id="${m.id}">
+      <div class="band pad"><div class="wrap">
+        <div class="label"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>Model ${num(mi)} of ${MODELS.length} · ${esc(streamOf(m.stream).name)}${m.added?" · New":""}</div>
+        <h2>${esc(m.name)}</h2>
+        <p>Measures ${esc(m.measures)}. Read across each row, then pick the number under the description that fits best, from 1 (Foundational) to 15 (${LENS[lensOf(m)].names[2]}).</p>
+        <div class="acts"><b>Discovery activities</b>${m.acts.map(a=>`<span>${esc(a)}</span>`).join("")}</div>
+        <div class="band-tools">${MODESWITCH}</div>
+        <div class="brandcheck"><b>Before you choose, ask: is this on brand?</b>Would your customers expect this from you? Can your people deliver it every day, at every touchpoint? Advanced is not always the right answer. Choose the level that fits who you are and who you want to be.</div>
+      </div></div>
+      <div class="table-wrap"><table class="mt"><thead><tr><th class="th-label">Dimension</th>${levelsFor(lensOf(m)).map((l,b)=>`<th class="th-${b}"><span class="lv"><i style="background:${l.c}"></i>${l.name}</span><small>${l.tag} · ${l.range}</small></th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="pad"><div class="wrap msum">
+        <div><div class="label">${esc(m.short)} average</div><div class="msum-score" id="mscore-${m.id}">—</div><div class="msum-target" id="mtarget-${m.id}"></div></div>
+        <div class="breakdown" id="mbreakdown-${m.id}"></div>
+        <div class="msum-right"><span class="pill" id="mtier-${m.id}">Not scored</span><button class="btn" type="button" data-go="${next?next.id:"results"}">${next?esc(next.short)+" →":"See results →"}</button></div>
+      </div></div>
+    </div>`;
+  }).join("");
+}
+
+/* ---------- update ---------- */
+const modelTarget = id => avg(targets[id].filter(v => v != null));
+const anyTargets = () => MODELS.some(m => modelTarget(m.id) != null);
+const gapText = (a, t) => { if (a == null || t == null) return ""; const d = t - a; return d > 0 ? `${d} to go` : d === 0 ? "on target" : `${-d} above target`; };
+function setMode(m){
+  mode = m; try { localStorage.setItem(MKEY, m); } catch(e){}
+  document.body.dataset.mode = m;
+  document.querySelectorAll(".modeswitch button").forEach(b => b.setAttribute("aria-pressed", b.dataset.mode === m));
+  refreshAll();
+}
+function paintLane(id, li){
+  const v = state[id][li], t = targets[id][li];
+  document.querySelectorAll(`.sb[data-m="${id}"][data-l="${li}"]`).forEach(b => { const n = +b.dataset.n; b.classList.toggle("sel", n === v); b.classList.toggle("tgt", n === t); b.setAttribute("aria-pressed", mode === "now" ? n === v : n === t); });
+  const cur = mode === "now" ? v : t, oth = mode === "now" ? t : v;
+  document.getElementById(`laneval-${id}-${li}`).textContent = cur ?? "—";
+  document.getElementById(`lanecap-${id}-${li}`).textContent = mode === "now" ? "now" : "target";
+  document.getElementById(`laneoth-${id}-${li}`).textContent = oth == null ? "" : (mode === "now" ? "target " : "now ") + oth;
+  const strips = document.getElementById(`row-${id}-${li}`).nextElementSibling.querySelectorAll("td.strip");
+  strips.forEach((td,b) => { td.classList.toggle("lit", v != null && b === lvIndex(v)); td.classList.toggle("tlit", t != null && b === lvIndex(t) && !(v != null && lvIndex(v) === b)); });
+  document.querySelectorAll(`#row-${id}-${li} td.lv-0, #row-${id}-${li} td.lv-1, #row-${id}-${li} td.lv-2`).forEach((td,b) => {
+    td.classList.toggle("lit", v != null && b === lvIndex(v));
+    td.classList.toggle("tlit", t != null && b === lvIndex(t) && !(v != null && lvIndex(v) === b));
+  });
+}
+function updateModelSummary(id){
+  const m = MODELS.find(x => x.id === id), a = modelAvg(id), t = modelTarget(id);
+  document.getElementById(`mscore-${id}`).innerHTML = a == null ? "—" : `${a}<small>/15</small>`;
+  document.getElementById(`mtarget-${id}`).innerHTML = t == null ? "Target not set" : `Target <b>${t}/15</b>${a != null ? " · " + gapText(a,t) : ""}`;
+  pill(document.getElementById(`mtier-${id}`), a, lensOf(m));
+  document.getElementById(`mbreakdown-${id}`).innerHTML = (a == null && t == null) ? "" : m.dims.map((d,i) => { const s = state[id][i], g = targets[id][i]; return `<div class="bd"><span>${esc(d.name)}</span><b><i style="background:${dotColor(s)}"></i>${s ?? "—"}${g != null ? " → " + g : ""}</b></div>`; }).join("");
+}
+function updateNav(){
+  MODELS.forEach(m => {
+    const tab = document.getElementById(`tab-${m.id}`), a = modelAvg(m.id), g = modelTarget(m.id);
+    tab.querySelector(".tab-score")?.remove();
+    if (a != null){ const t = tier(a), b = document.createElement("span"); b.className = "tab-score"; b.textContent = g != null ? `${a}→${g}` : a; b.style.background = t.c; b.style.color = t.on; tab.appendChild(b); }
+    const el = document.getElementById(`card-score-${m.id}`);
+    el.innerHTML = a == null ? `<i></i>Not scored` : `<i style="background:${tier(a).c}"></i><span style="color:var(--ink)">${a}/15 · ${tier(a, lensOf(m)).name}${g != null ? ` · target ${g}` : ""}</span>`;
+    document.getElementById(`card-${m.id}`).classList.toggle("scored", a != null);
+  });
+}
+function updateProgress(){
+  const n = MODELS.filter(m => modelAvg(m.id) != null).length, t = MODELS.filter(m => modelTarget(m.id) != null).length;
+  document.getElementById("prog-now").textContent = n ? `${n} of ${MODELS.length} models scored` : "";
+  document.getElementById("prog-target").textContent = t ? `Targets set for ${t} of ${MODELS.length} models` : "";
+}
+function refreshAll(){ MODELS.forEach(m => { m.dims.forEach((d,i) => paintLane(m.id,i)); updateModelSummary(m.id); }); updateNav(); }
+
+/* ---------- results ---------- */
+function focusOrder(avgs, tgts){
+  const scored = MODELS.filter(m => avgs[m.id] != null);
+  const hasT = scored.some(m => tgts[m.id] != null);
+  if (!hasT) return {list: scored.sort((a,b) => avgs[a.id] - avgs[b.id]), byGap: false};
+  const gap = m => tgts[m.id] == null ? -99 : tgts[m.id] - avgs[m.id];
+  return {list: scored.sort((a,b) => gap(b) - gap(a) || avgs[a.id] - avgs[b.id]), byGap: true};
+}
+function buildResults(){
+  const avgs = {}, tgts = {};
+  MODELS.forEach(m => { const a = modelAvg(m.id), t = modelTarget(m.id); if (a != null) avgs[m.id] = a; if (t != null) tgts[m.id] = t; });
+  const all = Object.values(avgs);
+  document.getElementById("resultsGrid").innerHTML = MODELS.map((m, mi) => {
+    const a = avgs[m.id], tg = tgts[m.id], head = `<div class="label">Model ${num(mi)} · ${esc(streamOf(m.stream).name)}</div><h3>${esc(m.name)}</h3>`;
+    if (a == null) return `<div class="rcard">${head}<div class="rempty">Not scored yet</div></div>`;
+    const bars = m.dims.map((d,i) => { const s = state[m.id][i], g = targets[m.id][i]; return `<div class="rbar"><span>${esc(d.name)}</span><div class="rtrack"><div class="rfill" style="width:${s?Math.round(s/15*100):0}%;background:${dotColor(s)}"></div>${g!=null?`<span class="rtick" style="left:${(g/15*100).toFixed(1)}%" title="Target ${g}"></span>`:""}</div><b>${s ?? "—"}</b></div>`; }).join("");
+    return `<div class="rcard">${head}<div class="rbig">${a}<small>/15</small></div><div>${pillHTML(a, lensOf(m))}</div><div class="rtarget">${tg != null ? `Target <b>${tg}/15 ${tier(tg, lensOf(m)).name}</b> · ${gapText(a,tg)}` : "Target not set"}</div><div class="rbars">${bars}</div></div>`;
+  }).join("");
+
+  const fo = focusOrder(avgs, tgts);
+  document.getElementById("recIntro").textContent = fo.byGap ? "Biggest gap between where you are and where you want to be first. Each action starts from where the model is today." : "Weakest models first. Each action fits the level the model scored at today. Set targets to rank by gap instead.";
+  document.getElementById("recGrid").innerHTML = fo.list.length ? fo.list.map(m => { const a = avgs[m.id], t = tier(a, lensOf(m)), g = tgts[m.id];
+    const tline = g == null ? "" : g <= a ? `<small><b>Target ${g}/15.</b> You are at or above your target. Hold this level and protect it.</small>` : `<small><b>Target ${g}/15 ${tier(g, lensOf(m)).name}</b> · ${g - a} to go</small>`;
+    return `<div class="rec"><div class="rec-top"><i style="background:${t.c}"></i>${esc(m.name)}<span>${a}/15 ${t.name}</span></div><p>${esc(RECS[m.id][lvIndex(a)])}</p>${tline}<small>Discovery activities: ${esc(m.acts.join("; "))}</small></div>`; }).join("") : `<p class="note">Score at least one model to see where to focus.</p>`;
+
+  const os = document.getElementById("overallScore"), ot = document.getElementById("overallTier"), on = document.getElementById("overallNote"), otg = document.getElementById("overallTarget");
+  const tAll = Object.values(tgts), oT = avg(tAll);
+  if (all.length){
+    const o = avg(all);
+    os.innerHTML = `${o}<small>/15</small>`; ot.innerHTML = pillHTML(o);
+    otg.innerHTML = oT != null ? `Target <b>${oT}/15 ${tier(oT).name}</b> · ${gapText(o,oT)}` : "";
+    const weakest = STREAMS.map(s => ({s, a: avg(MODELS.filter(m=>m.stream===s.id && avgs[m.id]!=null).map(m=>avgs[m.id]))})).filter(x=>x.a!=null).sort((x,y)=>x.a-y.a)[0];
+    on.textContent = fo.byGap && fo.list[0] && tgts[fo.list[0].id] > avgs[fo.list[0].id] ? `Biggest gap: ${fo.list[0].name}, ${avgs[fo.list[0].id]} now and ${tgts[fo.list[0].id]} wanted. Start there.` : `Weakest workstream: ${weakest.s.name} (${weakest.a}/15). Start the next discovery there.`;
+  } else { os.textContent = "—"; ot.innerHTML = ""; otg.innerHTML = ""; on.textContent = "Score at least one model to see your profile."; }
+  document.getElementById("resultsSub").textContent = `Based on ${all.length} of ${MODELS.length} models scored${tAll.length ? `, with targets set for ${tAll.length}` : ""}`;
+  document.getElementById("targetCta").hidden = !(all.length && !tAll.length);
+
+  document.getElementById("spread").innerHTML = STREAMS.map(s => {
+    const ms = MODELS.filter(m => m.stream === s.id), vals = ms.map(m => avgs[m.id]).filter(v => v != null), a = avg(vals);
+    const seen = {}, seenT = {};
+    const pts = ms.filter(m => avgs[m.id] != null).map(m => { const v = avgs[m.id], k = seen[v] = (seen[v]||0)+1; const off = (k-1)*7; return `<span class="pt" style="left:${((v-1)/14*100).toFixed(2)}%;top:calc(50% + ${off}px - ${(k>1?3:0)}px);background:${tier(v).c}" title="${esc(m.name)}: ${v}/15 now"></span>`; }).join("");
+    const tps = ms.filter(m => tgts[m.id] != null).map(m => { const v = tgts[m.id], k = seenT[v] = (seenT[v]||0)+1; const off = (k-1)*7; return `<span class="pt tg" style="left:${((v-1)/14*100).toFixed(2)}%;top:calc(50% + ${off}px - ${(k>1?3:0)}px)" title="${esc(m.name)}: target ${v}/15"></span>`; }).join("");
+    return `<div class="sp-row"><div class="sp-name">${esc(s.name)}</div><div class="track" role="img" aria-label="${esc(s.name)}: ${vals.length} of ${ms.length} models scored${a!=null?", average "+a:""}"><div class="z0"></div><div class="z1"></div><div class="z2"></div>${pts}${tps}</div><div class="sp-avg" style="color:${a==null?"var(--faint)":"var(--ink)"}">${a ?? "—"}</div></div>`;
+  }).join("") + `<div class="sp-axis"><div></div><div><span>1</span><span>5</span><span>10</span><span>15</span></div><div></div></div><div class="legend"><span><i style="background:var(--ink)"></i>Where you are</span><span><i style="border:2px solid var(--ink)"></i>Where you want to be</span></div>`;
+}
+function summaryText(){
+  const L = ["ideasabound · Experience Maturity Assessment", ""];
+  STREAMS.forEach(s => {
+    L.push(s.name.toUpperCase());
+    MODELS.filter(m => m.stream === s.id).forEach(m => { const a = modelAvg(m.id), t = modelTarget(m.id); L.push(`${m.name}: ${a==null?"not scored":a+"/15 "+tier(a, lensOf(m)).name}${t!=null?` (target ${t}/15)`:""}`); m.dims.forEach((d,i)=>{ const v = state[m.id][i], g = targets[m.id][i]; if (v!=null || g!=null) L.push(`  ${d.name}: ${v ?? "–"}${g!=null?` → ${g}`:""}`); }); });
+    L.push("");
+  });
+  const all = MODELS.map(m=>modelAvg(m.id)).filter(x=>x!=null), tAll = MODELS.map(m=>modelTarget(m.id)).filter(x=>x!=null);
+  if (all.length){ const o = avg(all); L.push(`Overall: ${o}/15 ${tier(o).name}${tAll.length?` (target ${avg(tAll)}/15)`:""}`); }
+  return L.join("\n");
+}
+
+/* ---------- navigation ---------- */
+function showSection(id){
+  if (id === "home") updateProgress();
+  document.querySelectorAll(".section").forEach(s => s.classList.toggle("active", s.id === id));
+  document.querySelectorAll(".nav-tab").forEach(t => t.classList.toggle("active", t.dataset.go === id));
+  document.getElementById("tab-"+id)?.scrollIntoView({block:"nearest", inline:"nearest"});
+  if (id === "results") buildResults();
+  try { history.replaceState(null, "", "#"+id); } catch(e){}
+  window.scrollTo(0,0);
+}
+function clearUI(confirming){
+  document.getElementById("clearWrap").innerHTML = confirming
+    ? `<span class="note">Clear every score and target?</span> <button class="btn" type="button" data-act="clear-yes">Clear</button> <button class="btn" type="button" data-act="clear-no">Keep</button>`
+    : `<button class="btn" type="button" data-act="clear">Clear scores</button>`;
+}
+document.addEventListener("click", e => {
+  const ms = e.target.closest(".modeswitch button"); if (ms){ setMode(ms.dataset.mode); return; }
+  const g = e.target.closest("[data-go]"); if (g){ showSection(g.dataset.go); return; }
+  const b = e.target.closest(".sb");
+  if (b){ const id=b.dataset.m, li=+b.dataset.l, n=+b.dataset.n, arr = mode === "now" ? state : targets; arr[id][li] = arr[id][li] === n ? null : n; save(); paintLane(id,li); updateModelSummary(id); updateNav(); return; }
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  if (a.dataset.act === "start-target"){ setMode("target"); const first = MODELS.find(m => modelAvg(m.id) != null && targets[m.id].some(v => v == null)) || MODELS.find(m => modelAvg(m.id) != null) || MODELS[0]; showSection(first.id); return; }
+  if (a.dataset.act === "start-now"){ setMode("now"); const first = MODELS.find(m => state[m.id].some(v => v == null)) || MODELS[0]; showSection(first.id); return; }
+  if (a.dataset.act === "clear") clearUI(true);
+  if (a.dataset.act === "clear-no") clearUI(false);
+  if (a.dataset.act === "clear-yes"){ MODELS.forEach(m => { state[m.id] = m.dims.map(()=>null); targets[m.id] = m.dims.map(()=>null); }); save(); setMode("now"); buildResults(); clearUI(false); document.getElementById("actNote").textContent = "Scores and targets cleared"; }
+});
+document.getElementById("copyBtn").addEventListener("click", () => {
+  const txt = summaryText(), note = document.getElementById("actNote");
+  const fallback = () => { document.getElementById("copyOut").innerHTML = `<textarea class="copybox" id="copyText" readonly>${esc(txt)}</textarea>`; const t = document.getElementById("copyText"); t.focus(); t.select(); note.textContent = "Copy the text below"; };
+  try { navigator.clipboard.writeText(txt).then(() => note.textContent = "Summary copied", fallback); } catch(err){ fallback(); }
+});
+
+
+/* ---------- PDF report ---------- */
+const META_KEY = "ideasabound-maturity-meta";
+let meta = {};
+try { meta = JSON.parse(localStorage.getItem(META_KEY)) || {}; } catch(e) { meta = {}; }
+const bizName = document.getElementById("bizName"), bizBy = document.getElementById("bizBy");
+bizName.value = meta.name || ""; bizBy.value = meta.by || "";
+[bizName, bizBy].forEach(el => el.addEventListener("input", () => { meta = {name: bizName.value.trim(), by: bizBy.value.trim()}; try { localStorage.setItem(META_KEY, JSON.stringify(meta)); } catch(e){} }));
+
+const RGB = {ink:[24,24,27],muted:[94,94,102],faint:[150,150,158],line:[226,226,222],sunk:[238,238,235],white:[255,255,255]};
+const LVRGB = [[226,72,61],[242,194,48],[45,108,223]];
+const LVTINT = [[252,237,235],[253,246,223],[234,240,252]];
+const pdfSafe = t => String(t).replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/[^\x00-\xFF–—•]/g,"");
+
+function buildPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({unit:"mm", format:"a4"});
+  const W = 210, H = 297, M = 18, CW = W - 2*M, BOTTOM = H - 20;
+  let y = M;
+  const pt = 0.3528;
+  const font = (size, style="normal", col=RGB.ink) => { doc.setFont("helvetica", style); doc.setFontSize(size); doc.setTextColor(...col); };
+  const lh = size => size * pt * 1.4;
+  const need = h => { if (y + h > BOTTOM){ doc.addPage(); y = M; } };
+  const text = (t, x, top, size, style, col, opts) => { font(size, style, col); doc.text(pdfSafe(t), x, top + size*pt*0.8, opts); };
+  const para = (t, size, style, col, x=M, w=CW, gap=0) => { font(size, style, col); const lines = doc.splitTextToSize(pdfSafe(t), w); need(lines.length*lh(size)); doc.text(lines, x, y + size*pt*0.8, {lineHeightFactor:1.4}); y += lines.length*lh(size) + gap; };
+  const dots = (x, cy, r=1.1, gap=3.2) => LVRGB.forEach((c,i) => { doc.setFillColor(...c); doc.circle(x + r + i*gap, cy, r, "F"); });
+  const rule = (col=RGB.line) => { doc.setDrawColor(...col); doc.setLineWidth(0.25); doc.line(M, y, W-M, y); };
+  const pill = (label, lv, x, top) => { font(8, "bold"); const w = doc.getTextWidth(label) + 6; doc.setFillColor(...LVRGB[lv]); doc.roundedRect(x, top, w, 5.4, 2.7, 2.7, "F"); text(label, x+3, top+1.2, 8, "bold", lv===1 ? RGB.ink : RGB.white); return w; };
+  const bar = (x, top, w, v, h=2.2) => { doc.setFillColor(...RGB.sunk); doc.roundedRect(x, top, w, h, h/2, h/2, "F"); if (v){ doc.setFillColor(...LVRGB[lvIndex(v)]); doc.roundedRect(x, top, Math.max(h, w*v/15), h, h/2, h/2, "F"); } };
+
+  const avgs = {}, tgts = {}; MODELS.forEach(m => { const a = modelAvg(m.id), t = modelTarget(m.id); if (a != null) avgs[m.id] = a; if (t != null) tgts[m.id] = t; });
+  const tick = (x, top, w, g, h) => { if (g == null) return; doc.setFillColor(...RGB.ink); doc.rect(x + w*g/15 - 0.4, top - 1, 0.8, h + 2, "F"); };
+  const tAll = Object.values(tgts), overallT = avg(tAll);
+  const streamTgt = sid => avg(MODELS.filter(m => m.stream === sid && tgts[m.id] != null).map(m => tgts[m.id]));
+  const all = Object.values(avgs), overall = avg(all);
+  const streamAvg = sid => avg(MODELS.filter(m => m.stream === sid && avgs[m.id] != null).map(m => avgs[m.id]));
+  const date = new Date().toLocaleDateString("en-GB", {day:"numeric", month:"long", year:"numeric"});
+
+  /* ----- page 1: summary ----- */
+  dots(M, y+1.6, 1.2, 3.4);
+  text("ideas", M, y+4, 15, "bold"); font(15,"bold"); const iw = doc.getTextWidth("ideas");
+  text("abound", M+iw+0.4, y+4, 15, "normal", RGB.muted);
+  y += 18;
+  doc.setCharSpace(0.5); text("EXPERIENCE MATURITY REPORT", M, y, 8.5, "bold", RGB.muted); doc.setCharSpace(0);
+  y += 7;
+  para(meta.name || "Your business", 26, "bold", RGB.ink, M, CW, 1);
+  para([meta.by ? "Completed by " + meta.by : null, date, `${all.length} of ${MODELS.length} models scored`, tAll.length ? `targets set for ${tAll.length}` : null].filter(Boolean).join("  ·  "), 10, "normal", RGB.muted, M, CW, 6);
+  rule(); y += 8;
+
+  text("WHERE YOU ARE", M, y, 8, "bold", RGB.muted); if (overallT != null) text("WHERE YOU WANT TO BE", M+95, y, 8, "bold", RGB.muted); y += 5;
+  if (overall != null){
+    text(String(overall), M, y, 44, "bold"); font(44,"bold"); const ow = doc.getTextWidth(String(overall));
+    text("/15", M+ow+1.5, y+8.5, 16, "normal", RGB.faint);
+    pill(tier(overall).name, lvIndex(overall), M+ow+15, y+10);
+    if (overallT != null){
+      text(String(overallT), M+95, y, 44, "bold"); font(44,"bold"); const tw = doc.getTextWidth(String(overallT));
+      text("/15", M+95+tw+1.5, y+8.5, 16, "normal", RGB.faint);
+      pill(tier(overallT).name, lvIndex(overallT), M+95+tw+15, y+10);
+    }
+    y += 21;
+    const fo0 = focusOrder(avgs, tgts), top = fo0.list[0];
+    if (fo0.byGap && top && tgts[top.id] > avgs[top.id]) para(`Biggest gap: ${top.name}, ${avgs[top.id]} now and ${tgts[top.id]} wanted. Start there.`, 10.5, "normal", RGB.muted, M, CW, 8);
+    else { const weakest = STREAMS.map(s => ({s, a: streamAvg(s.id)})).filter(x => x.a != null).sort((a,b) => a.a - b.a)[0]; para(`Weakest workstream: ${weakest.s.name} (${weakest.a}/15). Start there.`, 10.5, "normal", RGB.muted, M, CW, 8); }
+  }
+
+  text("BY WORKSTREAM", M, y, 8, "bold", RGB.muted); y += 6;
+  STREAMS.forEach(s => {
+    const a = streamAvg(s.id), ms = MODELS.filter(m => m.stream === s.id), n = ms.filter(m => avgs[m.id] != null).length;
+    text(s.name, M, y, 10.5, "bold"); text(`${n} of ${ms.length} scored`, M, y+4.6, 8, "normal", RGB.faint);
+    const st = streamTgt(s.id);
+    bar(M+62, y+2.2, CW-62-24, a, 3); tick(M+62, y+2.2, CW-62-24, st, 3);
+    text(a == null ? "–" : String(a) + (st != null ? "  > " + st : ""), W-M, y, 12, "bold", a == null ? RGB.faint : RGB.ink, {align:"right"});
+    y += 11;
+  });
+  y += 2;
+  LVRGB.forEach((c,i) => { doc.setFillColor(...c); doc.circle(M + 1.2 + i*48, y+1.4, 1.2, "F"); text(`${LENS.mixed.names[i]} ${LV[i].range}`, M + 4 + i*48, y, 8.5, "normal", RGB.muted); });
+  if (tAll.length){ doc.setFillColor(...RGB.ink); doc.rect(M + 146, y, 0.8, 4, "F"); text("Target", M + 149, y, 8.5, "normal", RGB.muted); }
+  y += 10; rule(); y += 8;
+
+  const fo = focusOrder(avgs, tgts), order = fo.list;
+  text(fo.byGap ? "WHERE TO FOCUS FIRST: BIGGEST GAPS" : "WHERE TO FOCUS FIRST", M, y, 8, "bold", RGB.muted); y += 7;
+  if (!order.length) para("No models scored yet.", 10, "normal", RGB.muted);
+  order.slice(0,3).forEach((m,i) => {
+    const a = avgs[m.id];
+    need(26);
+    text(`${i+1}.  ${m.name}`, M, y, 11, "bold");
+    text(tgts[m.id] != null ? `${a} now  ·  ${tgts[m.id]} target` : `${a}/15 ${tier(a, lensOf(m)).name}`, W-M, y, 9.5, "bold", RGB.muted, {align:"right"});
+    y += 6;
+    para(RECS[m.id][lvIndex(a)], 9.5, "normal", RGB.ink, M+5, CW-5, 5);
+  });
+
+  need(22); rule(); y += 5;
+  text("REVIEW WITH YOUR TEAM", M, y, 8, "bold", RGB.muted); y += 5;
+  para("Compare where you are and where you want to be with your team. Agree which areas to tackle first for immediate business and operational impact, and which can wait.", 9.5, "normal", RGB.ink, M, CW, 2);
+
+  /* ----- model detail ----- */
+  doc.addPage(); y = M;
+  text("Model detail", M, y, 18, "bold"); y += 9;
+  para("Each dimension shows where you are, with the description of that level. Where you set a different target level, the target description follows. The black mark on each bar is your target.", 9.5, "normal", RGB.muted, M, CW, 6);
+  const NAMEW = 46, SCOREX = M + NAMEW + 2, DESCX = SCOREX + 25, DESCW = W - M - DESCX - 2;
+  STREAMS.forEach(s => {
+    need(30);
+    doc.setFillColor(...RGB.ink); doc.rect(M, y, CW, 8, "F");
+    dots(M+4, y+4, 0.9, 2.6);
+    doc.setCharSpace(0.4); text(s.name.toUpperCase(), M+13, y+2.3, 9, "bold", RGB.white); doc.setCharSpace(0);
+    y += 13;
+    MODELS.filter(m => m.stream === s.id).forEach(m => {
+      const a = avgs[m.id];
+      need(a == null ? 12 : 30);
+      text(m.name, M, y, 12.5, "bold");
+      if (a == null){ text("Not scored", W-M, y+0.6, 9, "normal", RGB.faint, {align:"right"}); y += 9; rule(); y += 5; return; }
+      const tn = tier(a, lensOf(m)).name;
+      font(8,"bold"); const lw = doc.getTextWidth(tn) + 6;
+      pill(tn, lvIndex(a), W-M-lw, y-0.2);
+      text(`${a}/15${tgts[m.id] != null ? "  >  target " + tgts[m.id] : ""}`, W-M-lw-3, y+0.3, 11, "bold", RGB.ink, {align:"right"});
+      y += 6.5;
+      para(`${LENS[lensOf(m)].label} model. Measures ${m.measures}.`, 8.5, "normal", RGB.muted, M, CW, 3);
+      m.dims.forEach((d, i) => {
+        const v = state[m.id][i], g = targets[m.id][i];
+        font(8.5, "normal"); const desc = doc.splitTextToSize(pdfSafe(v == null ? "Not scored" : d.levels[lvIndex(v)]), DESCW);
+        const showT = g != null && (v == null || lvIndex(g) !== lvIndex(v));
+        const tdesc = showT ? doc.splitTextToSize(pdfSafe("Target: " + d.levels[lvIndex(g)]), DESCW) : [];
+        font(8.5, "bold"); const nm = doc.splitTextToSize(pdfSafe(d.name), NAMEW);
+        const h = Math.max(desc.length + tdesc.length, nm.length) * lh(8.5) + 3;
+        need(h);
+        if (v != null){ doc.setFillColor(...LVTINT[lvIndex(v)]); doc.rect(DESCX-2, y-1, DESCW+4, h-1, "F"); }
+        font(8.5, "bold", RGB.ink); doc.text(nm, M, y + 8.5*pt*0.8, {lineHeightFactor:1.4});
+        text(v == null ? "–" : String(v), SCOREX, y, 9.5, "bold", v == null ? RGB.faint : RGB.ink);
+        bar(SCOREX + 7, y + 1.2, 13, v, 1.8); tick(SCOREX + 7, y + 1.2, 13, g, 1.8);
+        font(8.5, "normal", v == null ? RGB.faint : RGB.ink); doc.text(desc, DESCX, y + 8.5*pt*0.8, {lineHeightFactor:1.4});
+        if (tdesc.length){ font(8.5, "italic", RGB.muted); doc.text(tdesc, DESCX, y + desc.length*lh(8.5) + 8.5*pt*0.8, {lineHeightFactor:1.4}); }
+        y += h;
+      });
+      y += 2;
+      need(16);
+      text("NEXT STEP", M, y, 7.5, "bold", RGB.muted); y += 4;
+      para(RECS[m.id][lvIndex(a)], 9, "normal", RGB.ink, M, CW, 1.5);
+      para("Evidence to gather: " + m.acts.join("; "), 8, "normal", RGB.muted, M, CW, 3);
+      rule(); y += 6;
+    });
+    y += 2;
+  });
+
+  /* ----- footer ----- */
+  const n = doc.getNumberOfPages();
+  for (let i = 1; i <= n; i++){
+    doc.setPage(i);
+    doc.setDrawColor(...RGB.line); doc.setLineWidth(0.25); doc.line(M, H-13, W-M, H-13);
+    text("ideasabound  ·  Experience Maturity Assessment", M, H-10.5, 7.5, "normal", RGB.faint);
+    text(`${meta.name ? pdfSafe(meta.name) + "  ·  " : ""}Page ${i} of ${n}`, W-M, H-10.5, 7.5, "normal", RGB.faint, {align:"right"});
+  }
+  return doc;
+}
+
+document.getElementById("pdfBtn").addEventListener("click", async () => {
+  const note = document.getElementById("actNote"), btn = document.getElementById("pdfBtn");
+  if (!MODELS.some(m => modelAvg(m.id) != null)){ note.textContent = "Score at least one model before downloading the report."; return; }
+  if (!window.jspdf){ note.textContent = "The PDF tool did not load. Check your connection and reload the page."; return; }
+  btn.disabled = true; note.textContent = "Building your report…";
+  try {
+    const doc = buildPDF();
+    const slug = (meta.name || "experience").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"") || "experience";
+    const filename = `${slug}-maturity-report.pdf`;
+    let dl = null;
+    if (window.claude && typeof window.claude.use === "function"){ try { dl = await window.claude.use("downloads"); } catch(e){ dl = null; } }
+    if (dl){
+      try { await dl.save({filename, data: doc.output("blob")}); note.textContent = "Report saved"; }
+      catch(err){
+        const c = err && err.code;
+        note.textContent = c === "declined" ? "Download cancelled" : c === "rate_limited" ? "A save prompt is already open. Finish it, then try again." : "Downloads are not available in this view. Use Copy summary instead.";
+      }
+    } else if (window.claude && typeof window.claude.use === "function"){
+      note.textContent = "Downloads are not available in this view. Use Copy summary instead.";
+    } else {
+      doc.save(filename); note.textContent = "Report downloaded";
+    }
+  } catch(e){ note.textContent = "The report could not be built. Reload the page and try again."; }
+  btn.disabled = false;
+});
+
+buildNav(); buildHome(); buildSections(); clearUI(false); setMode(mode); updateProgress();
+const start = (location.hash || "").slice(1);
+if (start && document.getElementById(start)?.classList.contains("section")) showSection(start);
+</script>
+
+</body>
+</html>
